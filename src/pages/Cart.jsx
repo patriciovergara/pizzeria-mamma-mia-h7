@@ -1,8 +1,16 @@
 // src/pages/Cart.jsx
 import { useCart } from '../context/CartContext'
+import { useUser } from '../context/UserContext'
 
 export default function Cart() {
   const { cart, addToCart, removeFromCart, total } = useCart()
+  const { token } = useUser()
+
+  const handlePay = () => {
+    if (!token) return
+    // acá podrías simular un pago real o solo un alert
+    alert('Pago realizado con éxito 😎')
+  }
 
   if (cart.length === 0) {
     return (
@@ -22,7 +30,7 @@ export default function Cart() {
           {cart.map((item) => (
             <tr key={item.id}>
               <td style={{ width: '80px' }}>
-                <img src={item.img} className="img-fluid rounded" />
+                <img src={item.img} className="img-fluid rounded" alt={item.name} />
               </td>
 
               <td>{item.name}</td>
@@ -33,9 +41,19 @@ export default function Cart() {
 
               <td className="text-center">
                 <div className="btn-group">
-                  <button className="btn btn-outline-secondary" onClick={() => removeFromCart(item.id)}>-</button>
+                  <button
+                    className="btn btn-outline-secondary"
+                    onClick={() => removeFromCart(item.id)}
+                  >
+                    -
+                  </button>
                   <span className="btn btn-light">{item.qty}</span>
-                  <button className="btn btn-outline-secondary" onClick={() => addToCart(item)}>+</button>
+                  <button
+                    className="btn btn-outline-secondary"
+                    onClick={() => addToCart(item)}
+                  >
+                    +
+                  </button>
                 </div>
               </td>
 
@@ -47,7 +65,26 @@ export default function Cart() {
         </tbody>
       </table>
 
-      <h3 className="text-end mt-4">Total: ${total.toLocaleString('es-CL')}</h3>
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mt-4 gap-3">
+        <h3 className="text-md-start text-center mb-0">
+          Total: ${total.toLocaleString('es-CL')}
+        </h3>
+
+        <div className="text-md-end text-center">
+          <button
+            className="btn btn-success px-4"
+            onClick={handlePay}
+            disabled={!token}
+          >
+            Pagar
+          </button>
+          {!token && (
+            <p className="text-danger small mt-2 mb-0">
+              Debes iniciar sesión para poder pagar.
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

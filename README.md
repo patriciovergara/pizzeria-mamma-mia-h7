@@ -1,176 +1,142 @@
-# 📘 **Pizzería Mamma Mía (Hito 6)**
+Pizzería Mamma Mía – Hito 7
+Aplicación React que simula el sitio web de una pizzería, desarrollada para el Hito 7 – React Router II del bootcamp.
+​
+En este hito se implementan rutas protegidas, manejo de token mediante contexto y consumo de una API (json-server) para obtener los detalles de cada pizza.
+​
 
-## 🍕 Descripción del proyecto
+Objetivos del hito
+Utilizar useParams para obtener el id de la pizza desde la URL y consumir el endpoint GET /api/pizzas/:id.
+​
 
-En este hito implementé el carrito de compras global utilizando React Context API, integré el enrutado mediante React Router, desarrollé la vista de detalle dinámica para cada pizza y optimicé la experiencia visual usando Bootstrap 5, logrando una interfaz más moderna, ordenada y fácil de usar.
+Implementar un UserContext que gestione un token simulado y provea acciones de login y logout.
+​
 
-El objetivo fue consolidar un flujo de compra completo, manteniendo la arquitectura modular y asegurando una experiencia coherente en todas las vistas.
+Proteger rutas con React Router y condicionar la navegación según el estado del token.
+​
+​
 
-### 🔗 Demo en GitHub Pages
+Deshabilitar acciones sensibles (como el pago del carrito) cuando el usuario no está autenticado.
+​
 
-👉 **[Ver demo aquí](https://patriciovergara.github.io/pizzeria-mamma-mia-h6/)**
+Características principales
+Detalle de pizza
 
-🛠 Tecnologías utilizadas
+Página Pizza.jsx que usa useParams para obtener el id desde la ruta /pizza/:id.
+​
 
-React + Vite
+Realiza una petición fetch a /api/pizzas/:id y muestra imagen, descripción, ingredientes y precio formateado.
 
-React Context API
+Autenticación simulada con contexto
 
-React Router DOM
+UserContext expone token, login y logout.
 
-Bootstrap 5
+El token se usa para controlar qué rutas y botones están disponibles, siguiendo los requisitos del hito.
+​
 
-JavaScript ES6
+Navbar dinámica
 
-CSS personalizado
+Usa UserContext y CartContext.
 
-### 📦 Funcionalidades implementadas
+Muestra siempre los enlaces Home y Total.
+​
 
-✔ 1. Estado global del carrito con React Context
+Con token = true: aparecen Profile y Logout.
 
-Creé el archivo:
+Con token = false: aparecen Login y Register.
+​
 
-src/context/CartContext.jsx
+Carrito de compras
 
+Página Cart.jsx con listado de pizzas añadidas, control de cantidades y total formateado.
 
-Este contexto administra:
+El botón “Pagar” se deshabilita automáticamente cuando token es false y muestra un mensaje indicando que es necesario iniciar sesión.
+​
 
-cart: lista de pizzas agregadas
+Rutas protegidas
 
-addToCart(): suma unidades
+ProtectedRoute revisa el token y, si es false, redirige a /login.
+​
+​
 
-removeFromCart(): resta unidades
+La ruta /profile está protegida bajo ProtectedRoute.
 
-total: suma total reactiva
+Si el usuario ya tiene token = true, las rutas /login y /register redirigen al home (/), impidiendo el acceso a esas páginas.
+​
 
-useCart(): custom hook para acceder fácilmente al estado
+Tecnologías utilizadas
+React con Vite.
 
-✔ 2. Navbar con total dinámico
+React Router DOM para enrutamiento y rutas protegidas.
+​
 
-El Navbar muestra en tiempo real el total del carrito:
+Context API para UserContext y CartContext.
 
-🛒 Total: $xx.xxx
+Bootstrap 5 para estilos y maquetación.
 
+json-server como API REST fake para pizzas.
 
-Se actualiza automáticamente según las acciones del usuario.
+Scripts disponibles
+En la raíz del proyecto:
 
-✔ 3. Cards interactivas
-
-Cada card permite:
-
-Ver ingredientes
-
-Acceder al detalle
-
-Añadir pizzas al carrito
-
-Utilizando el estado global de Context.
-
-✔ 4. Vista de detalle dinámica (/pizza/:id)
-
-Utilicé useParams() para capturar el ID desde la URL.
-La vista muestra:
-
-Imagen grande
-
-Nombre
-
-Ingredientes
-
-Precio
-
-Botón "Añadir al carrito"
-
-✔ 5. Carrito completamente funcional
-
-La página Cart.jsx incluye:
-
-Imagen del producto
-
-Cantidad actual
-
-Botones para aumentar/disminuir
-
-Subtotales
-
-Total global
-
-Vista especial cuando el carrito está vacío
-
-✔ 6. Navegación completa con React Router
-
-Configuro todas las rutas principales:
-
-/
-register
-login
-profile
-cart
-pizza/:id
-*
-
-
-Navbar y Footer se mantienen visibles en toda la aplicación.
-
-✔ 7. Optimización visual con Bootstrap
-
-Para mejorar la experiencia del usuario:
-
-Importé Bootstrap globalmente
-
-Utilicé grillas (container, row, col)
-
-Mejoré el uso de cards, botones y espaciados
-
-Apliqué estilos propios en index.css para pulir detalles
-
-El resultado es una aplicación más limpia, moderna y visualmente agradable.
-
-### 📁 Estructura del proyecto
-src/
-  assets/
-    img/
-  components/
-    Navbar.jsx
-    Header.jsx
-    CardPizza.jsx
-    Footer.jsx
-  context/
-    CartContext.jsx
-  pages/
-    Home.jsx
-    RegisterPage.jsx
-    LoginPage.jsx
-    Profile.jsx
-    Cart.jsx
-    Pizza.jsx
-    NotFound.jsx
-  pizzas.js
-  App.jsx
-  main.jsx
-  index.css
-
-### 🚀 Cómo ejecutar el proyecto
-npm install
 npm run dev
+Inicia el servidor de desarrollo de Vite en http://localhost:5173 (o el puerto configurado).
 
+npm run api
+Inicia json-server viendo el archivo pizzas.json en el puerto 3001, exponiendo los endpoints de la API de pizzas.
 
-Se abrirá en:
-
-http://localhost:5173
-
-### 📦 Cómo generar la versión para GitHub Pages
 npm run build
+Genera la versión optimizada para producción.
+
+npm run preview
+Sirve localmente la build de producción.
+
+npm run lint
+Ejecuta ESLint sobre el proyecto.
+
+Ejecución local con consumo de API
+Sigue estos pasos para levantar la aplicación con la API funcionando en local:
+
+Clonar el repositorio
 
 
-La carpeta generada es:
+git clone https://github.com/<tu-usuario>/pizzeria-mamma-mia-h6.git
+cd pizzeria-mamma-mia-h6
+Instalar dependencias
 
-/docs
+
+npm install
+Levantar la API de pizzas
+
+En una terminal 1 (dentro de la raíz del proyecto):
 
 
-GitHub Pages debe apuntar a esa carpeta desde Settings → Pages.
+npm run api
+Esto iniciará json-server leyendo pizzas.json y expondrá la API en:
 
-## 🎯 Conclusión
+http://localhost:3001/pizzas
 
-En este hito integré un carrito global completamente funcional, rutas dinámicas, manejo de estado centralizado con Context API y una optimización visual mediante Bootstrap.
-El resultado es una aplicación más profesional, escalable y coherente en su flujo de navegación y uso.
+http://localhost:3001/pizzas/:id
+
+Levantar el frontend
+
+En una terminal 2 (también en la raíz del proyecto):
+
+bash
+npm run dev
+Abre en el navegador la URL que indique Vite, por ejemplo:
+
+http://localhost:5173/
+
+Navegación esperada
+
+Desde el Home, puedes ver el listado de pizzas y navegar al detalle /pizza/:id.
+
+En el Navbar verás los botones según el estado del token.
+
+Desde Cart, podrás gestionar el carrito y probar el comportamiento del botón Pagar habilitado/deshabilitado según el token.
+​
+
+Notas sobre despliegue
+El proyecto está pensado para entorno local con json-server como backend.
+
+GitHub Pages solo sirve contenido estático, por lo que si deseas publicar la app con consumo de API, deberás desplegar json-server o un backend equivalente en un servicio externo (por ejemplo Render o Railway) y actualizar las URLs de la API en el frontend para que apunten a ese dominio.

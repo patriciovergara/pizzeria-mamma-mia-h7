@@ -6,5 +6,14 @@ export default defineConfig({
   build: {
     outDir: 'docs',
   },
-  base: '/pizzeria-mamma-mia-h6/',
+  base: '/pizzeria-mamma-mia-h7/',
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  }
 })
