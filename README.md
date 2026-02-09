@@ -1,142 +1,195 @@
-Pizzería Mamma Mía – Hito 7
-Aplicación React que simula el sitio web de una pizzería, desarrollada para el Hito 7 – React Router II del bootcamp.
-​
-En este hito se implementan rutas protegidas, manejo de token mediante contexto y consumo de una API (json-server) para obtener los detalles de cada pizza.
-​
-
-Objetivos del hito
-Utilizar useParams para obtener el id de la pizza desde la URL y consumir el endpoint GET /api/pizzas/:id.
-​
-
-Implementar un UserContext que gestione un token simulado y provea acciones de login y logout.
-​
-
-Proteger rutas con React Router y condicionar la navegación según el estado del token.
+📘 Pizzería Mamma Mía (Hito 7)
+🍕 Descripción del proyecto
+En este hito extendí la aplicación de Pizzería Mamma Mía incorporando rutas protegidas, un UserContext para simular autenticación y el consumo de una API REST para obtener el detalle de cada pizza mediante useParams.
 ​
 ​
-
-Deshabilitar acciones sensibles (como el pago del carrito) cuando el usuario no está autenticado.
+El objetivo fue consolidar el flujo de navegación seguro, diferenciando vistas públicas y privadas, y conectar la vista de detalle con un endpoint real (/api/pizzas/:id) servido con json-server.
 ​
 
-Características principales
-Detalle de pizza
+Para probar el consumo de API, sigue los pasos de “Cómo ejecutar el proyecto con API local”.
 
-Página Pizza.jsx que usa useParams para obtener el id desde la ruta /pizza/:id.
+🛠 Tecnologías utilizadas
+React + Vite
+
+React Router DOM (rutas protegidas, useParams, Navigate, Outlet)
 ​
 
-Realiza una petición fetch a /api/pizzas/:id y muestra imagen, descripción, ingredientes y precio formateado.
-
-Autenticación simulada con contexto
-
-UserContext expone token, login y logout.
-
-El token se usa para controlar qué rutas y botones están disponibles, siguiendo los requisitos del hito.
+React Context API (UserContext, CartContext)
 ​
 
-Navbar dinámica
+json-server como API fake de pizzas
 
-Usa UserContext y CartContext.
+Bootstrap 5
 
-Muestra siempre los enlaces Home y Total.
+JavaScript ES6
+
+CSS personalizado
+
+📦 Funcionalidades implementadas
+✔ 1. Detalle de pizza con useParams y API
+Componente: src/pages/Pizza.jsx.
+
+Usa useParams() para leer el id desde la ruta /pizza/:id.
 ​
 
-Con token = true: aparecen Profile y Logout.
-
-Con token = false: aparecen Login y Register.
-​
-
-Carrito de compras
-
-Página Cart.jsx con listado de pizzas añadidas, control de cantidades y total formateado.
-
-El botón “Pagar” se deshabilita automáticamente cuando token es false y muestra un mensaje indicando que es necesario iniciar sesión.
-​
-
-Rutas protegidas
-
-ProtectedRoute revisa el token y, si es false, redirige a /login.
+Realiza fetch('/api/pizzas/:id') para obtener los datos desde json-server y renderiza: imagen, nombre, descripción, ingredientes y precio formateado en CLP.
 ​
 ​
 
-La ruta /profile está protegida bajo ProtectedRoute.
+✔ 2. UserContext con token simulado
+Archivo: src/context/UserContext.jsx.
 
-Si el usuario ya tiene token = true, las rutas /login y /register redirigen al home (/), impidiendo el acceso a esas páginas.
+Administra:
+
+token: estado booleano que representa si el usuario está autenticado.
+
+login(): cambia token a true.
+
+logout(): cambia token a false.
 ​
 
-Tecnologías utilizadas
-React con Vite.
-
-React Router DOM para enrutamiento y rutas protegidas.
+Este contexto se usa en distintas partes de la app para mostrar/ocultar opciones y proteger rutas.
 ​
 
-Context API para UserContext y CartContext.
+✔ 3. Navbar dinámica con autenticación
+Archivo: src/components/Navbar.jsx.
 
-Bootstrap 5 para estilos y maquetación.
+Integra UserContext y CartContext.
 
-json-server como API REST fake para pizzas.
+Comportamiento según token:
+​
 
-Scripts disponibles
-En la raíz del proyecto:
+Siempre visibles: enlaces Home y Cart/Total.
 
-npm run dev
-Inicia el servidor de desarrollo de Vite en http://localhost:5173 (o el puerto configurado).
+Con token = true: botón Profile y botón Logout (que dispara logout).
 
-npm run api
-Inicia json-server viendo el archivo pizzas.json en el puerto 3001, exponiendo los endpoints de la API de pizzas.
+Con token = false: botones Login y Register.
 
-npm run build
-Genera la versión optimizada para producción.
+✔ 4. Carrito con botón “Pagar” protegido
+Archivo: src/pages/Cart.jsx.
 
-npm run preview
-Sirve localmente la build de producción.
+Muestra el detalle del carrito: imagen, nombre, cantidad, subtotal por producto y total global usando CartContext.
 
-npm run lint
-Ejecuta ESLint sobre el proyecto.
+El botón “Pagar”:
 
-Ejecución local con consumo de API
-Sigue estos pasos para levantar la aplicación con la API funcionando en local:
+Está deshabilitado cuando token es false.
 
-Clonar el repositorio
+Muestra un mensaje de aviso indicando que es necesario iniciar sesión para pagar.
+​
 
+✔ 5. Rutas protegidas y redirecciones
+Archivo de enrutado: src/router/AppRouter.jsx.
 
-git clone https://github.com/<tu-usuario>/pizzeria-mamma-mia-h6.git
-cd pizzeria-mamma-mia-h6
-Instalar dependencias
+Componente de protección: src/router/ProtectedRoute.jsx.
+​
+​
 
+Comportamiento:
+
+Ruta /profile está protegida mediante ProtectedRoute; si token es false, redirige a /login.
+​
+
+Rutas /login y /register:
+
+Si token es true, redirigen automáticamente al home (/), impidiendo que un usuario autenticado vuelva a esas pantallas.
+​
+
+Rutas públicas: /, /pizza/:id, /cart y * (404).
+​
+
+✔ 6. Carrito global y navegación (heredado del Hito 6)
+Se mantiene el CartContext con:
+
+cart, addToCart(), removeFromCart(), total.
+
+La navegación con React Router conserva las vistas:
+
+/, /register, /login, /profile, /cart, /pizza/:id, *.
+​
+
+📁 Estructura del proyecto (resumen)
+text
+src/
+  assets/
+    img/
+  components/
+    Navbar.jsx
+    Header.jsx
+    CardPizza.jsx
+    Footer.jsx
+  context/
+    CartContext.jsx
+    UserContext.jsx
+  pages/
+    Home.jsx
+    RegisterPage.jsx
+    LoginPage.jsx
+    Profile.jsx
+    Cart.jsx
+    Pizza.jsx
+    NotFound.jsx
+  router/
+    AppRouter.jsx
+    ProtectedRoute.jsx
+  pizzas.json          // fuente de datos para json-server
+  App.jsx
+  main.jsx
+  index.css
+🚀 Cómo ejecutar el proyecto con API local
+Para probar la app con el consumo real del endpoint /api/pizzas/:id, necesitas levantar dos servidores: el de la API (json-server) y el de Vite.
+
+1. Clonar el repositorio
+
+git clone https://github.com/patriciovergara/pizzeria-mamma-mia-h7.git
+cd pizzeria-mamma-mia-h7
+2. Instalar dependencias
 
 npm install
-Levantar la API de pizzas
-
-En una terminal 1 (dentro de la raíz del proyecto):
+3. Levantar la API de pizzas (json-server)
+En una terminal 1, dentro de la raíz del proyecto:
 
 
 npm run api
-Esto iniciará json-server leyendo pizzas.json y expondrá la API en:
+Esto ejecuta:
+
+
+json-server --watch pizzas.json --port 3001
+La API quedará disponible en:
 
 http://localhost:3001/pizzas
 
 http://localhost:3001/pizzas/:id
 
-Levantar el frontend
+4. Levantar el frontend (Vite)
+En una terminal 2, también en la raíz del proyecto:
 
-En una terminal 2 (también en la raíz del proyecto):
 
-bash
 npm run dev
-Abre en el navegador la URL que indique Vite, por ejemplo:
+Abre el enlace que te muestre Vite (por defecto):
 
 http://localhost:5173/
 
-Navegación esperada
+5. Flujo de prueba sugerido
+Entra al Home y revisa el listado de pizzas.
 
-Desde el Home, puedes ver el listado de pizzas y navegar al detalle /pizza/:id.
+Haz clic en “Ver más” (o el enlace configurado) para ir a /pizza/:id y ver el detalle obtenido desde la API.
 
-En el Navbar verás los botones según el estado del token.
+Agrega algunas pizzas al carrito y verifica que el total se actualiza en el Navbar.
 
-Desde Cart, podrás gestionar el carrito y probar el comportamiento del botón Pagar habilitado/deshabilitado según el token.
+Entra a Cart y prueba el botón “Pagar” con y sin token (según la lógica de login/logout que definas).
 ​
 
-Notas sobre despliegue
-El proyecto está pensado para entorno local con json-server como backend.
+📦 Cómo generar la versión para producción
 
-GitHub Pages solo sirve contenido estático, por lo que si deseas publicar la app con consumo de API, deberás desplegar json-server o un backend equivalente en un servicio externo (por ejemplo Render o Railway) y actualizar las URLs de la API en el frontend para que apunten a ese dominio.
+npm run build
+Vite generará la versión optimizada en la carpeta:
+
+
+dist/
+Para publicar en GitHub Pages deberás configurar el deploy de la carpeta dist y, si quieres mantener el consumo de API en producción, desplegar json-server o una API equivalente en un servicio externo (Render, Railway, etc.) y actualizar las URLs de la API en el frontend.
+
+🎯 Conclusión
+En este hito integré rutas protegidas, un UserContext para gestionar el token de autenticación, y el consumo de una API REST para el detalle de pizzas, manteniendo el carrito global y la navegación completa implementada en el hito anterior.
+​
+​
+El resultado es una aplicación más segura y cercana a un escenario real, con control de acceso a secciones privadas, manejo de sesión simulado y una experiencia de compra coherente de extremo a extremo.
